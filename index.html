@@ -81,20 +81,56 @@
     <script>
         const GITHUB_BASE = 'https://raw.githubusercontent.com/gphospal-wq/atlas-acupuntura/main/';
         
-        // Páginas SIN imagen (saltos)
-        const saltos = [30, 94, 174, 202, 216, 222, 242, 345, 362, 390, 466, 560, 562, 572, 584, 600, 618, 664, 724];
+        // PUNTOS DE CONTROL VERIFICADOS (imagen → página)
+        const controlPoints = [
+            { img: 1, page: 1 },
+            { img: 24, page: 24 },
+            { img: 76, page: 77 },
+            { img: 121, page: 123 },
+            { img: 166, page: 169 },
+            { img: 200, page: 205 },
+            { img: 230, page: 237 },
+            { img: 250, page: 258 },
+            { img: 306, page: 314 },
+            { img: 336, page: 344 },
+            { img: 350, page: 359 },
+            { img: 382, page: 393 },
+            { img: 400, page: 412 },
+            { img: 427, page: 439 },
+            { img: 447, page: 459 },
+            { img: 500, page: 513 },
+            { img: 600, page: 619 },
+            { img: 700, page: 720 }
+        ];
         
-        // FÓRMULA: imagen = página - 6 (primeras 6 sin imagen) - saltos antes
+        // Función para calcular imagen desde página usando interpolación
         function pageToImage(pageNum) {
-            let saltosAntes = saltos.filter(s => s < pageNum).length;
-            if (saltos.includes(pageNum)) return null;
-            if (pageNum < 7) return null;
-            return pageNum - 6 - saltosAntes;
+            // Buscar entre qué puntos de control está
+            for (let i = 0; i < controlPoints.length - 1; i++) {
+                if (pageNum >= controlPoints[i].page && pageNum <= controlPoints[i + 1].page) {
+                    // Interpolación lineal
+                    const ratio = (pageNum - controlPoints[i].page) / (controlPoints[i + 1].page - controlPoints[i].page);
+                    const img = controlPoints[i].img + ratio * (controlPoints[i + 1].img - controlPoints[i].img);
+                    return Math.round(img);
+                }
+            }
+            
+            // Fuera de rango
+            if (pageNum < controlPoints[0].page) return null;
+            if (pageNum > controlPoints[controlPoints.length - 1].page) {
+                const last = controlPoints[controlPoints.length - 1];
+                return last.img + (pageNum - last.page);
+            }
+            
+            return null;
         }
+        
+        // Páginas sin imagen (saltos conocidos)
+        const noImagePages = [30, 94, 174, 202, 216, 222, 242, 345, 362, 390, 466, 560, 562, 572, 584, 600, 618, 664, 724];
         
         const indexData = [
             { title: '📖 Capítulos Preliminares', children: [
-                { title: 'Cap 1: Jing luo', page: 7 },
+                { title: 'Cap 1: Jing luo', page: 1 },
                 { title: 'Cap 2: Métodos de localización', page: 31 },
                 { title: 'Cap 3: Orientación anatómica', page: 37 }
             ]},
@@ -467,7 +503,7 @@
             
             const imageNum = pageToImage(pageNum);
             
-            if (imageNum !== null && imageNum >= 1) {
+            if (imageNum !== null && imageNum >= 1 && imageNum <= 711) {
                 currentPageNum = pageNum;
                 currentImageNum = imageNum;
                 displayImage(imageNum, pageNum, element);
@@ -490,7 +526,6 @@
         }
         
         function displayImage(imageNum, pageNum, element) {
-            // 4 DÍGITOS: 0001, 0024, 0076, 0122, etc.
             const paddedNum = String(imageNum).padStart(4, '0');
             const imageUrl = GITHUB_BASE + paddedNum + '.jpg';
             const img = new Image();
