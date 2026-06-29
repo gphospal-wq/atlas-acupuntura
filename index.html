@@ -3,133 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas de Acupuntura - Claudia Focks</title>
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2d5f4f">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Atlas de Acupuntura - Claudia Focks</title>
+    <link rel="apple-touch-icon" href="icon-512.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary: #2d5f4f;
-            --secondary: #3a7d6a;
-            --accent: #c9a961;
-            --bg: #faf8f3;
-            --surface: #ffffff;
-            --text: #2c3e50;
-        }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-            background: var(--bg); 
-            color: var(--text);
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        header { 
-            text-align: center; 
-            padding: 30px 20px; 
-            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            border-radius: 15px; 
-            margin-bottom: 25px;
-            color: white;
-        }
-        .search-box { 
-            background: white; 
-            padding: 15px; 
-            border-radius: 10px; 
-            margin-bottom: 25px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        .search-box input { 
-            width: 100%; 
-            padding: 12px; 
-            border: 2px solid var(--secondary); 
-            border-radius: 8px; 
-            font-size: 16px;
-        }
-        .main-grid { 
-            display: grid; 
-            grid-template-columns: 1fr; 
-            gap: 25px; 
-        }
-        @media (min-width: 1024px) { 
-            .main-grid { grid-template-columns: 350px 1fr; } 
-        }
-        .nav-panel { 
-            background: white; 
-            padding: 25px; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .tree-header { 
-            padding: 10px 12px; 
-            background: var(--bg); 
-            border-radius: 8px; 
-            cursor: pointer; 
-            margin: 5px 0;
-            border-left: 3px solid transparent;
-        }
-        .tree-header:hover { 
-            background: #f0ebe3; 
-            border-left-color: var(--secondary);
-        }
-        .tree-children { 
-            display: none; 
-            margin-left: 15px; 
-            padding-left: 10px; 
-            border-left: 2px solid var(--accent);
-        }
-        .tree-children.show { display: block; }
-        .tree-point { 
-            padding: 8px 12px; 
-            margin: 3px 0; 
-            background: white; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            border: 1px solid #e8e4dc;
-            display: flex;
-            justify-content: space-between;
-        }
-        .tree-point:hover { 
-            background: var(--secondary); 
-            color: white;
-        }
-        .tree-point.active { 
-            background: var(--primary); 
-            color: white;
-        }
-        .viewer-panel { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            min-height: 600px;
-        }
-        .image-display { 
-            max-width: 100%; 
-            border-radius: 10px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-        }
-        .nav-buttons { 
-            display: flex; 
-            justify-content: center; 
-            gap: 12px; 
-            margin-top: 25px;
-        }
-        .btn { 
-            padding: 10px 24px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .btn-primary { 
-            background: var(--primary); 
-            color: white;
-        }
-        .btn-secondary { 
-            background: white; 
-            color: var(--primary); 
-            border: 2px solid var(--secondary);
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #faf8f3; color: #2c3e50; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #2d5f4f 0%, #3a7d6a 100%); border-radius: 15px; margin-bottom: 25px; }
+        header h1 { font-size: 2em; color: white; margin-bottom: 5px; }
+        header .subtitle { font-size: 0.9em; color: #e8d4a0; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .search-box { flex: 1; min-width: 200px; background: white; padding: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .search-box input { width: 100%; border: none; font-size: 16px; outline: none; }
+        .btn { padding: 12px 20px; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background: #2d5f4f; color: white; }
+        .btn-primary:hover { background: #3a7d6a; transform: translateY(-2px); }
+        .btn-secondary { background: white; color: #2d5f4f; border: 2px solid #2d5f4f; }
+        .viewer { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); min-height: 500px; text-align: center; }
+        .viewer img { max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .viewer-info { background: #faf8f3; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: inline-block; border-left: 4px solid #c9a961; }
+        .nav-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .placeholder { padding: 60px 20px; color: #8b9aa8; }
+        .placeholder-icon { font-size: 3em; margin-bottom: 15px; opacity: 0.5; }
+        .error { background: #fff5f5; color: #c53030; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .page-input { width: 100px; padding: 8px; border: 2px solid #2d5f4f; border-radius: 8px; font-size: 16px; text-align: center; }
+        .quick-jump { display: flex; gap: 10px; align-items: center; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            header { padding: 20px 15px; }
+            header h1 { font-size: 1.5em; }
+            .viewer { padding: 15px; }
         }
     </style>
 </head>
@@ -137,601 +43,167 @@
     <div class="container">
         <header>
             <h1>📚 Atlas de Acupuntura</h1>
-            <p>Claudia Focks - Edición Digital</p>
+            <div class="subtitle">Claudia Focks - Edición Digital</div>
         </header>
-        
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar punto, meridiano o página...">
-        </div>
-        
-        <div class="main-grid">
-            <div class="nav-panel">
-                <h2>📑 Índice</h2>
-                <div id="treeNav"></div>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Buscar por número de página (ej: 83, 129, 251)...">
             </div>
-            <div class="viewer-panel">
-                <div id="viewerContent">
-                    <div style="text-align: center; padding: 60px 20px; color: #8b9aa8;">
-                        <h3>Selecciona un punto o capítulo</h3>
-                        <p>La imagen aparecerá aquí</p>
-                    </div>
-                </div>
+        </div>
+
+        <div class="quick-jump">
+            <span>Ir a página:</span>
+            <input type="number" id="pageInput" class="page-input" min="1" max="732" placeholder="83">
+            <button class="btn btn-primary" onclick="goToPage()">Ir</button>
+            <button class="btn btn-secondary" onclick="showRandom()"> Aleatorio</button>
+        </div>
+
+        <div class="viewer" id="viewer">
+            <div class="placeholder">
+                <div class="placeholder-icon">📖</div>
+                <h3>Introduce un número de página</h3>
+                <p>Usa el buscador o el campo de arriba para navegar</p>
+                <p style="margin-top: 20px; font-size: 0.9em;">💡 Ejemplos: 83 (P1), 129 (E1), 251 (V1)</p>
             </div>
         </div>
     </div>
 
     <script>
+        // DATOS SINCRONIZADOS Y VERIFICADOS
         const GITHUB_BASE = 'https://raw.githubusercontent.com/gphospal-wq/atlas-acupuntura/main/';
         
-        // SALTOS EXACTOS - 21 páginas sin imagen
+        // Saltos de página (sin imagen) - VERIFICADOS
         const saltos = new Set([30, 94, 128, 174, 202, 216, 222, 242, 348, 362, 390, 398, 466, 560, 562, 572, 584, 600, 618, 664, 724]);
         
         let currentImageNum = 0;
         let currentPageNum = 0;
 
-        // Función para calcular imagen desde página usando la tabla sincronizada
+        // FÓRMULA VERIFICADA: imagen = página - saltos_acumulados
         function pageToImage(pageNum) {
+            if (pageNum < 1 || pageNum > 732) return null;
             if (saltos.has(pageNum)) return null;
             
-            // Contar cuántos saltos hay antes de esta página
-            let saltosAntes = 0;
-            saltos.forEach(s => {
-                if (s < pageNum) saltosAntes++;
-            });
-            
-            return pageNum - saltosAntes;
+            let img = pageNum;
+            saltos.forEach(s => { if (s < pageNum) img--; });
+            return img;
         }
 
-        // ÍNDICE COMPLETO SINCRONIZADO
-        const indexData = [
-            { title: '📖 Cap 1: Jing luo', page: 1 },
-            { title: '📖 Cap 2: Métodos de localización', page: 31 },
-            { title: '📖 Cap 3: Orientación anatómica', page: 37 },
-            { 
-                title: '🌿 4.1 Pulmón (P)', 
-                page: 79, 
-                points: [
-                    { name: 'P1 - Zhongfu', page: 83 },
-                    { name: 'P2 - Yunmen', page: 84 },
-                    { name: 'P3 - Tianfu', page: 85 },
-                    { name: 'P4 - Xiabai', page: 86 },
-                    { name: 'P5 - Chize', page: 87 },
-                    { name: 'P6 - Kongzui', page: 88 },
-                    { name: 'P7 - Lieque', page: 89 },
-                    { name: 'P8 - Jingqu', page: 90 },
-                    { name: 'P9 - Taiyuan', page: 91 },
-                    { name: 'P10 - Yuji', page: 92 },
-                    { name: 'P11 - Shaoshang', page: 93 }
-                ]
-            },
-            { 
-                title: '🌿 4.2 Intestino Grueso (IG)', 
-                page: 95,
-                points: [
-                    { name: 'IG1 - Shangyang', page: 101 },
-                    { name: 'IG2 - Erjian', page: 102 },
-                    { name: 'IG3 - Sanjian', page: 103 },
-                    { name: 'IG4 - Hegu', page: 104 },
-                    { name: 'IG5 - Yangxi', page: 105 },
-                    { name: 'IG6 - Pianli', page: 106 },
-                    { name: 'IG7 - Wenliu', page: 107 },
-                    { name: 'IG8 - Xialian', page: 108 },
-                    { name: 'IG9 - Shanglian', page: 109 },
-                    { name: 'IG10 - Shousanli', page: 110 },
-                    { name: 'IG11 - Quchi', page: 111 },
-                    { name: 'IG12 - Zhouliao', page: 112 },
-                    { name: 'IG13 - Shouwuli', page: 113 },
-                    { name: 'IG14 - Binao', page: 114 },
-                    { name: 'IG15 - Jianyu', page: 115 },
-                    { name: 'IG16 - Jugu', page: 116 },
-                    { name: 'IG17 - Tianding', page: 117 },
-                    { name: 'IG18 - Futu', page: 118 },
-                    { name: 'IG19 - Heliao', page: 119 },
-                    { name: 'IG20 - Yingxiang', page: 120 }
-                ]
-            },
-            { 
-                title: '🌿 4.3 Estómago (E)', 
-                page: 121,
-                points: [
-                    { name: 'E1 - Chengqi', page: 129 },
-                    { name: 'E2 - Sibai', page: 130 },
-                    { name: 'E3 - Juliao', page: 131 },
-                    { name: 'E4 - Dicang', page: 132 },
-                    { name: 'E5 - Daying', page: 133 },
-                    { name: 'E6 - Jiache', page: 134 },
-                    { name: 'E7 - Xiaguan', page: 135 },
-                    { name: 'E8 - Touwei', page: 136 },
-                    { name: 'E9 - Renying', page: 137 },
-                    { name: 'E10 - Shuitu', page: 138 },
-                    { name: 'E11 - Qishe', page: 139 },
-                    { name: 'E12 - Quepen', page: 140 },
-                    { name: 'E13 - Qihu', page: 141 },
-                    { name: 'E14 - Kufang', page: 142 },
-                    { name: 'E15 - Wuyi', page: 143 },
-                    { name: 'E16 - Yingchuang', page: 144 },
-                    { name: 'E17 - Ruzhong', page: 145 },
-                    { name: 'E18 - Rugen', page: 146 },
-                    { name: 'E19 - Burong', page: 147 },
-                    { name: 'E20 - Chengman', page: 148 },
-                    { name: 'E21 - Liangmen', page: 149 },
-                    { name: 'E22 - Guanmen', page: 150 },
-                    { name: 'E23 - Taiyi', page: 151 },
-                    { name: 'E24 - Huaroumen', page: 152 },
-                    { name: 'E25 - Tianshu', page: 153 },
-                    { name: 'E26 - Wailing', page: 154 },
-                    { name: 'E27 - Daju', page: 155 },
-                    { name: 'E28 - Shuidao', page: 156 },
-                    { name: 'E29 - Guilai', page: 157 },
-                    { name: 'E30 - Qichong', page: 158 },
-                    { name: 'E31 - Biguan', page: 159 },
-                    { name: 'E32 - Futu', page: 160 },
-                    { name: 'E33 - Yinshi', page: 161 },
-                    { name: 'E34 - Liangqiu', page: 162 },
-                    { name: 'E35 - Dibi', page: 163 },
-                    { name: 'E36 - Zusanli', page: 164 },
-                    { name: 'E37 - Shangjuxu', page: 165 },
-                    { name: 'E38 - Tiaokou', page: 166 },
-                    { name: 'E39 - Xiajuxu', page: 167 },
-                    { name: 'E40 - Fenglong', page: 168 },
-                    { name: 'E41 - Jiexi', page: 169 },
-                    { name: 'E42 - Chongyang', page: 170 },
-                    { name: 'E43 - Xiangu', page: 171 },
-                    { name: 'E44 - Neiting', page: 172 },
-                    { name: 'E45 - Lidui', page: 173 }
-                ]
-            },
-            { 
-                title: '🌿 4.4 Bazo (B)', 
-                page: 175,
-                points: [
-                    { name: 'B1 - Yinbai', page: 181 },
-                    { name: 'B2 - Dadu', page: 182 },
-                    { name: 'B3 - Taibai', page: 183 },
-                    { name: 'B4 - Gongsun', page: 184 },
-                    { name: 'B5 - Shangqiu', page: 185 },
-                    { name: 'B6 - Sanyinjiao', page: 186 },
-                    { name: 'B7 - Lougu', page: 187 },
-                    { name: 'B8 - Diji', page: 188 },
-                    { name: 'B9 - Yinlingquan', page: 189 },
-                    { name: 'B10 - Xuehai', page: 190 },
-                    { name: 'B11 - Jishu', page: 191 },
-                    { name: 'B12 - Chongmen', page: 192 },
-                    { name: 'B13 - Fushe', page: 193 },
-                    { name: 'B14 - Fujie', page: 194 },
-                    { name: 'B15 - Daheng', page: 195 },
-                    { name: 'B16 - Fuai', page: 196 },
-                    { name: 'B17 - Shidou', page: 197 },
-                    { name: 'B18 - Tianxi', page: 198 },
-                    { name: 'B19 - Xiongxiang', page: 199 },
-                    { name: 'B20 - Zhouying', page: 200 },
-                    { name: 'B21 - Dabao', page: 201 }
-                ]
-            },
-            { 
-                title: '🌿 4.5 Corazón (C)', 
-                page: 203,
-                points: [
-                    { name: 'C1 - Jiquan', page: 207 },
-                    { name: 'C2 - Qingling', page: 208 },
-                    { name: 'C3 - Shaohai', page: 209 },
-                    { name: 'C4 - Lingdao', page: 210 },
-                    { name: 'C5 - Tongli', page: 211 },
-                    { name: 'C6 - Yinxi', page: 212 },
-                    { name: 'C7 - Shenmen', page: 213 },
-                    { name: 'C8 - Shaofu', page: 214 },
-                    { name: 'C9 - Shaochong', page: 215 }
-                ]
-            },
-            { 
-                title: '🌿 4.6 Intestino Delgado (ID)', 
-                page: 217,
-                points: [
-                    { name: 'ID1 - Shaoze', page: 223 },
-                    { name: 'ID2 - Qiangu', page: 224 },
-                    { name: 'ID3 - Houxi', page: 225 },
-                    { name: 'ID4 - Wangu', page: 226 },
-                    { name: 'ID5 - Yanggu', page: 227 },
-                    { name: 'ID6 - Yanglao', page: 228 },
-                    { name: 'ID7 - Zhizheng', page: 229 },
-                    { name: 'ID8 - Xiaohai', page: 230 },
-                    { name: 'ID9 - Jianzhen', page: 231 },
-                    { name: 'ID10 - Naoshu', page: 232 },
-                    { name: 'ID11 - Tianzong', page: 233 },
-                    { name: 'ID12 - Bingfeng', page: 234 },
-                    { name: 'ID13 - Quyuan', page: 235 },
-                    { name: 'ID14 - Jianwaishu', page: 236 },
-                    { name: 'ID15 - Jianzhongshu', page: 237 },
-                    { name: 'ID16 - Tianchuang', page: 238 },
-                    { name: 'ID17 - Tianrong', page: 239 },
-                    { name: 'ID18 - Quanliao', page: 240 },
-                    { name: 'ID19 - Tinggong', page: 241 }
-                ]
-            },
-            { 
-                title: '🌿 4.7 Vejiga (V)', 
-                page: 243,
-                points: [
-                    { name: 'V1 - Jingming', page: 251 },
-                    { name: 'V2 - Zanzhu', page: 252 },
-                    { name: 'V3 - Meichong', page: 253 },
-                    { name: 'V4 - Quchai', page: 254 },
-                    { name: 'V5 - Wuchu', page: 255 },
-                    { name: 'V6 - Chengguang', page: 256 },
-                    { name: 'V7 - Tongtian', page: 257 },
-                    { name: 'V8 - Luoque', page: 258 },
-                    { name: 'V9 - Yuzhen', page: 259 },
-                    { name: 'V10 - Tianzhu', page: 260 },
-                    { name: 'V11 - Dazhu', page: 261 },
-                    { name: 'V12 - Fengmen', page: 262 },
-                    { name: 'V13 - Feishu', page: 263 },
-                    { name: 'V14 - Jueyinshu', page: 264 },
-                    { name: 'V15 - Xinshu', page: 265 },
-                    { name: 'V16 - Dushu', page: 266 },
-                    { name: 'V17 - Geshu', page: 267 },
-                    { name: 'V18 - Ganshu', page: 268 },
-                    { name: 'V19 - Danshu', page: 269 },
-                    { name: 'V20 - Pishu', page: 270 },
-                    { name: 'V21 - Weishu', page: 271 },
-                    { name: 'V22 - Sanjiaoshu', page: 272 },
-                    { name: 'V23 - Shenshu', page: 273 },
-                    { name: 'V24 - Qihaishu', page: 274 },
-                    { name: 'V25 - Dachangshu', page: 275 },
-                    { name: 'V26 - Guanyuanshu', page: 276 },
-                    { name: 'V27 - Xiaochangshu', page: 277 },
-                    { name: 'V28 - Pangguangshu', page: 278 },
-                    { name: 'V29 - Zhonglushu', page: 279 },
-                    { name: 'V30 - Baihuanshu', page: 280 },
-                    { name: 'V31 - Shangliao', page: 281 },
-                    { name: 'V32 - Ciliao', page: 282 },
-                    { name: 'V33 - Zhongliao', page: 283 },
-                    { name: 'V34 - Xialiao', page: 284 },
-                    { name: 'V35 - Huiyang', page: 285 },
-                    { name: 'V36 - Chengfu', page: 286 },
-                    { name: 'V37 - Yinmen', page: 287 },
-                    { name: 'V38 - Fuxi', page: 288 },
-                    { name: 'V39 - Weiyang', page: 289 },
-                    { name: 'V40 - Weizhong', page: 290 },
-                    { name: 'V41 - Fufen', page: 291 },
-                    { name: 'V42 - Pohu', page: 292 },
-                    { name: 'V43 - Gaohuang', page: 293 },
-                    { name: 'V44 - Shentang', page: 294 },
-                    { name: 'V45 - Yixi', page: 295 },
-                    { name: 'V46 - Geguan', page: 296 },
-                    { name: 'V47 - Hunmen', page: 297 },
-                    { name: 'V48 - Yanggang', page: 298 },
-                    { name: 'V49 - Yishe', page: 299 },
-                    { name: 'V50 - Weicang', page: 300 },
-                    { name: 'V51 - Huangmen', page: 301 },
-                    { name: 'V52 - Zhishi', page: 302 },
-                    { name: 'V53 - Baohuang', page: 303 },
-                    { name: 'V54 - Zhibian', page: 304 },
-                    { name: 'V55 - Heyang', page: 305 },
-                    { name: 'V56 - Chengjin', page: 306 },
-                    { name: 'V57 - Chengshan', page: 307 },
-                    { name: 'V58 - Feiyang', page: 308 },
-                    { name: 'V59 - Fuyang', page: 309 },
-                    { name: 'V60 - Kunlun', page: 310 },
-                    { name: 'V61 - Pucan', page: 311 },
-                    { name: 'V62 - Shenmai', page: 312 },
-                    { name: 'V63 - Jinmen', page: 313 },
-                    { name: 'V64 - Jinggu', page: 314 },
-                    { name: 'V65 - Shugu', page: 314 },
-                    { name: 'V66 - Zutonggu', page: 314 },
-                    { name: 'V67 - Zhiyin', page: 314 }
-                ]
-            },
-            { 
-                title: '🌿 4.8 Riñón (R)', 
-                page: 315,
-                points: [
-                    { name: 'R1 - Yongquan', page: 321 },
-                    { name: 'R2 - Rangu', page: 322 },
-                    { name: 'R3 - Taixi', page: 323 },
-                    { name: 'R4 - Dazhong', page: 324 },
-                    { name: 'R5 - Shuiquan', page: 325 },
-                    { name: 'R6 - Zhaohai', page: 326 },
-                    { name: 'R7 - Fuliu', page: 327 },
-                    { name: 'R8 - Jiaoxin', page: 328 },
-                    { name: 'R9 - Zhubin', page: 329 },
-                    { name: 'R10 - Yingu', page: 330 },
-                    { name: 'R11 - Henggu', page: 331 },
-                    { name: 'R12 - Dahe', page: 332 },
-                    { name: 'R13 - Qixue', page: 333 },
-                    { name: 'R14 - Siman', page: 334 },
-                    { name: 'R15 - Zhongzhu', page: 335 },
-                    { name: 'R16 - Huangshu', page: 336 },
-                    { name: 'R17 - Shangqu', page: 337 },
-                    { name: 'R18 - Shiguan', page: 338 },
-                    { name: 'R19 - Yindu', page: 339 },
-                    { name: 'R20 - Tonggu', page: 340 },
-                    { name: 'R21 - Youmen', page: 341 },
-                    { name: 'R22 - Bulang', page: 342 },
-                    { name: 'R23 - Shenfeng', page: 343 },
-                    { name: 'R24 - Lingxu', page: 344 },
-                    { name: 'R25 - Shencang', page: 345 },
-                    { name: 'R26 - Yuzhong', page: 346 },
-                    { name: 'R27 - Shufu', page: 347 }
-                ]
-            },
-            { 
-                title: '🌿 4.9 Pericardio (MC)', 
-                page: 349,
-                points: [
-                    { name: 'MC1 - Tianchi', page: 353 },
-                    { name: 'MC2 - Tianquan', page: 354 },
-                    { name: 'MC3 - Quze', page: 355 },
-                    { name: 'MC4 - Ximen', page: 356 },
-                    { name: 'MC5 - Jianshi', page: 357 },
-                    { name: 'MC6 - Neiguan', page: 358 },
-                    { name: 'MC7 - Daling', page: 359 },
-                    { name: 'MC8 - Laogong', page: 360 },
-                    { name: 'MC9 - Zhongchong', page: 361 }
-                ]
-            },
-            { 
-                title: '🌿 4.10 Triple Recalentador (TR)', 
-                page: 363,
-                points: [
-                    { name: 'TR1 - Guanchong', page: 367 },
-                    { name: 'TR2 - Yemen', page: 368 },
-                    { name: 'TR3 - Zhongzhu', page: 369 },
-                    { name: 'TR4 - Yangchi', page: 370 },
-                    { name: 'TR5 - Waiguan', page: 371 },
-                    { name: 'TR6 - Zhigou', page: 372 },
-                    { name: 'TR7 - Huizong', page: 373 },
-                    { name: 'TR8 - Sanyangluo', page: 374 },
-                    { name: 'TR9 - Sidu', page: 375 },
-                    { name: 'TR10 - Tianjing', page: 376 },
-                    { name: 'TR11 - Qinglengyuan', page: 377 },
-                    { name: 'TR12 - Xiaoluo', page: 378 },
-                    { name: 'TR13 - Naohui', page: 379 },
-                    { name: 'TR14 - Jianliao', page: 380 },
-                    { name: 'TR15 - Tianliao', page: 381 },
-                    { name: 'TR16 - Tianyou', page: 382 },
-                    { name: 'TR17 - Yifeng', page: 383 },
-                    { name: 'TR18 - Chimai', page: 384 },
-                    { name: 'TR19 - Luxi', page: 385 },
-                    { name: 'TR20 - Jiaosun', page: 386 },
-                    { name: 'TR21 - Ermen', page: 387 },
-                    { name: 'TR22 - Erheliao', page: 388 },
-                    { name: 'TR23 - Sizhukong', page: 389 }
-                ]
-            },
-            { 
-                title: '🌿 4.11 Vesícula Biliar (VB)', 
-                page: 391,
-                points: [
-                    { name: 'VB1 - Tongziliao', page: 399 },
-                    { name: 'VB2 - Tinghui', page: 400 },
-                    { name: 'VB3 - Shangguang', page: 401 },
-                    { name: 'VB4 - Hanyan', page: 402 },
-                    { name: 'VB5 - Xuanlu', page: 403 },
-                    { name: 'VB6 - Xuanli', page: 404 },
-                    { name: 'VB7 - Qubin', page: 405 },
-                    { name: 'VB8 - Shuaigu', page: 406 },
-                    { name: 'VB9 - Tianchong', page: 407 },
-                    { name: 'VB10 - Fubai', page: 408 },
-                    { name: 'VB11 - Touqiaoyin', page: 409 },
-                    { name: 'VB12 - Wangu', page: 410 },
-                    { name: 'VB13 - Benshen', page: 411 },
-                    { name: 'VB14 - Yangbai', page: 412 },
-                    { name: 'VB15 - Toulinqi', page: 413 },
-                    { name: 'VB16 - Muchuang', page: 414 },
-                    { name: 'VB17 - Zhengying', page: 415 },
-                    { name: 'VB18 - Chengling', page: 416 },
-                    { name: 'VB19 - Naokong', page: 417 },
-                    { name: 'VB20 - Fengchi', page: 418 },
-                    { name: 'VB21 - Jianjing', page: 419 },
-                    { name: 'VB22 - Yuanye', page: 420 },
-                    { name: 'VB23 - Zhejin', page: 421 },
-                    { name: 'VB24 - Riyue', page: 422 },
-                    { name: 'VB25 - Jingmen', page: 423 },
-                    { name: 'VB26 - Daimai', page: 424 },
-                    { name: 'VB27 - Wushu', page: 425 },
-                    { name: 'VB28 - Weidao', page: 426 },
-                    { name: 'VB29 - Juliao', page: 427 },
-                    { name: 'VB30 - Huantiao', page: 428 },
-                    { name: 'VB31 - Fengshi', page: 429 },
-                    { name: 'VB32 - Zhongdu', page: 430 },
-                    { name: 'VB33 - Xiyangguan', page: 431 },
-                    { name: 'VB34 - Yanglingquan', page: 432 },
-                    { name: 'VB35 - Yangjiao', page: 433 },
-                    { name: 'VB36 - Waiqiu', page: 434 },
-                    { name: 'VB37 - Guangming', page: 435 },
-                    { name: 'VB38 - Yangfu', page: 436 },
-                    { name: 'VB39 - Xuanzhong', page: 437 },
-                    { name: 'VB40 - Qiuxu', page: 438 },
-                    { name: 'VB41 - Zulinqi', page: 439 },
-                    { name: 'VB42 - Diwuhui', page: 440 },
-                    { name: 'VB43 - Xiaxi', page: 441 },
-                    { name: 'VB44 - Zuqiaoyin', page: 442 }
-                ]
-            },
-            { 
-                title: '🌿 4.12 Hígado (H)', 
-                page: 443,
-                points: [
-                    { name: 'H1 - Dadun', page: 449 },
-                    { name: 'H2 - Xingjian', page: 450 },
-                    { name: 'H3 - Taichong', page: 451 },
-                    { name: 'H4 - Zhongfeng', page: 452 },
-                    { name: 'H5 - Ligou', page: 453 },
-                    { name: 'H6 - Zhongdu', page: 454 },
-                    { name: 'H7 - Xiguan', page: 455 },
-                    { name: 'H8 - Ququan', page: 456 },
-                    { name: 'H9 - Yinbao', page: 457 },
-                    { name: 'H10 - Zuwuli', page: 458 },
-                    { name: 'H11 - Yinlian', page: 459 },
-                    { name: 'H12 - Jimai', page: 460 },
-                    { name: 'H13 - Zhangmen', page: 461 },
-                    { name: 'H14 - Qimen', page: 462 }
-                ]
-            },
-            { title: '✨ 5.1 Chong mai', page: 463 },
-            { title: '✨ 5.2 Ren mai', page: 467 },
-            { title: '✨ 5.3 Du mai', page: 495 },
-            { title: '✨ 5.4 Dai mai', page: 527 },
-            { title: '✨ 5.5 Yin wei mai', page: 528 },
-            { title: '✨ 5.6 Yang wei mai', page: 530 },
-            { title: '✨ 5.7 Yin qiao mai', page: 533 },
-            { title: '✨ 5.8 Yang qiao mai', page: 534 },
-            { title: '📌 6.1 Ex-CaCu', page: 537 },
-            { title: '📌 6.2 Ex-PA', page: 561 },
-            { title: '📌 6.3 Ex-E', page: 571 },
-            { title: '📌 6.4 Ex-ES', page: 585 },
-            { title: '📌 6.5 Ex-EI', page: 601 },
-            { title: '📍 7.1 Cara anterior cabeza', page: 619 },
-            { title: '📍 7.2 Cabeza lateral', page: 623 },
-            { title: '📍 7.3 Región occipital', page: 627 },
-            { title: '📍 7.4 Vértice craneal', page: 629 },
-            { title: '📍 7.5 Espalda', page: 632 },
-            { title: '📍 7.6 Tórax y abdomen', page: 634 },
-            { title: '📍 7.7 Hombro posterior', page: 636 },
-            { title: '📍 7.8 Hombro anterior', page: 640 },
-            { title: '📍 7.9 Dorso mano', page: 644 },
-            { title: '📍 7.10 Pierna anterior', page: 646 },
-            { title: '📍 7.11 Pierna medial', page: 650 },
-            { title: '📍 7.12 Pierna lateral', page: 653 },
-            { title: '📍 7.13 Dorso pie', page: 656 },
-            { title: '📍 7.14 Pie medial', page: 660 },
-            { title: '📍 7.15 Pie lateral', page: 662 },
-            { title: '📚 8.1 Categorías', page: 665 },
-            { title: '📚 8.2 Estrategias', page: 685 },
-            { title: '📚 8.3 Combinaciones', page: 691 },
-            { title: '🔬 9.1 Introducción', page: 697 },
-            { title: '🔬 9.2 Investigación', page: 699 },
-            { title: '🔬 9.3 Resumen', page: 721 },
-            { title: '📎 Apéndice', page: 723 },
-            { title: '📎 Bibliografía', page: 725 },
-            { title: '📎 Índice', page: 727 }
-        ];
-
-        function generateIndex() {
-            const treeNav = document.getElementById('treeNav');
-            let html = '';
-            
-            indexData.forEach(item => {
-                if (item.points) {
-                    html += `<div class="tree-header" onclick="toggleTree(this)">
-                        <span>${item.title} (${item.points.length} pts)</span>
-                        <span>▼</span>
-                    </div>`;
-                    html += `<div class="tree-children">`;
-                    item.points.forEach(point => {
-                        const img = pageToImage(point.page);
-                        const hasImage = img !== null;
-                        html += `<div class="tree-point" onclick="loadPage(${point.page}, '${point.name}', ${hasImage})">
-                            <span>${point.name}</span>
-                            <span style="color: #8b9aa8; font-size: 0.85em;">pág. ${point.page}${hasImage ? ` (img ${img})` : ''}</span>
-                        </div>`;
-                    });
-                    html += `</div>`;
-                } else {
-                    const img = pageToImage(item.page);
-                    const hasImage = img !== null;
-                    html += `<div class="tree-point" onclick="loadPage(${item.page}, '${item.title}', ${hasImage})">
-                        <span>${item.title}</span>
-                        <span style="color: #8b9aa8; font-size: 0.85em;">pág. ${item.page}${hasImage ? ` (img ${img})` : ' (SALTO)'}</span>
-                    </div>`;
-                }
-            });
-            
-            treeNav.innerHTML = html;
-        }
-
-        function toggleTree(element) {
-            const children = element.nextElementSibling;
-            if (children && children.classList.contains('tree-children')) {
-                children.classList.toggle('show');
-                element.classList.toggle('active');
-            }
-        }
-
-        function loadPage(pageNum, title, hasImage) {
-            const viewerContent = document.getElementById('viewerContent');
-            
-            if (!hasImage) {
-                viewerContent.innerHTML = `
-                    <div style="text-align: center; padding: 60px 20px;">
-                        <h2>📄 ${title}</h2>
-                        <p style="margin-top: 20px; color: #8b9aa8;">Página ${pageNum} - Sin imagen asociada</p>
-                    </div>
-                `;
+        function goToPage() {
+            const pageNum = parseInt(document.getElementById('pageInput').value);
+            if (!pageNum || pageNum < 1 || pageNum > 732) {
+                alert('Introduce un número de página válido (1-732)');
                 return;
             }
+            loadPage(pageNum);
+        }
+
+        function loadPage(pageNum) {
+            const viewer = document.getElementById('viewer');
+            viewer.innerHTML = '<div class="placeholder"><div class="placeholder-icon">⏳</div><p>Cargando...</p></div>';
             
             const imageNum = pageToImage(pageNum);
+            
+            if (imageNum === null) {
+                viewer.innerHTML = `
+                    <div class="error">
+                        <h3>📄 Página ${pageNum}</h3>
+                        <p>Esta página no tiene imagen asociada (es un salto en el libro)</p>
+                    </div>`;
+                return;
+            }
+
+            currentPageNum = pageNum;
+            currentImageNum = imageNum;
+            displayImage(imageNum, pageNum);
+        }
+
+        function displayImage(imageNum, pageNum) {
             const paddedNum = String(imageNum).padStart(4, '0');
             const imageUrl = GITHUB_BASE + paddedNum + '.jpg';
-            
-            viewerContent.innerHTML = '<div style="text-align: center; padding: 50px;">Cargando imagen...</div>';
+            const viewer = document.getElementById('viewer');
             
             const img = new Image();
             img.onload = function() {
-                viewerContent.innerHTML = `
-                    <div style="text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #e8d4a0;">
-                        <h2>📖 ${title}</h2>
-                        <div style="background: #faf8f3; padding: 10px 20px; border-radius: 8px; display: inline-block; margin-top: 10px;">
-                            <strong>Imagen:</strong> ${paddedNum}.jpg | <strong>Página:</strong> ${pageNum}
-                        </div>
+                viewer.innerHTML = `
+                    <div class="viewer-info">
+                        <strong>📖 Página:</strong> ${pageNum} | 
+                        <strong>🖼️ Imagen:</strong> ${paddedNum}.jpg
                     </div>
-                    <div style="text-align: center;">
-                        <img src="${imageUrl}" alt="Página ${pageNum}" class="image-display">
-                    </div>
+                    <img src="${imageUrl}" alt="Página ${pageNum}" onclick="toggleZoom(this)">
                     <div class="nav-buttons">
-                        <button class="btn btn-secondary" onclick="previousImage()">⬅️ Anterior</button>
-                        <button class="btn btn-primary" onclick="nextImage()">Siguiente ➡️</button>
-                    </div>
-                `;
-                currentPageNum = pageNum;
-                currentImageNum = imageNum;
+                        <button class="btn btn-secondary" onclick="previousPage()">⬅️ Anterior</button>
+                        <button class="btn btn-primary" onclick="nextPage()">Siguiente ️</button>
+                    </div>`;
             };
             img.onerror = function() {
-                viewerContent.innerHTML = `
-                    <div style="background: #fff5f5; color: #c53030; padding: 20px; border-radius: 8px; text-align: center;">
-                        <h3>Error al cargar</h3>
-                        <p>No se pudo cargar la imagen ${paddedNum}.jpg</p>
-                        <p style="margin-top: 10px; font-size: 0.9em;">Verifica tu conexión a internet</p>
-                    </div>
-                `;
+                viewer.innerHTML = `<div class="error">No se pudo cargar la imagen ${paddedNum}.jpg<br>Verifica tu conexión o que el archivo existe en GitHub</div>`;
             };
             img.src = imageUrl;
         }
 
-        function previousImage() {
-            if (currentImageNum > 1) {
-                currentImageNum--;
+        function toggleZoom(img) {
+            img.style.transform = img.style.transform === 'scale(2)' ? 'scale(1)' : 'scale(2)';
+            img.style.transition = 'transform 0.3s';
+            img.style.cursor = img.style.transform === 'scale(2)' ? 'zoom-out' : 'zoom-in';
+        }
+
+        function previousPage() {
+            if (currentPageNum > 1) {
                 currentPageNum--;
-                while (saltos.has(currentPageNum) && currentPageNum > 1) {
-                    currentPageNum--;
-                }
-                loadPage(currentPageNum, 'Navegación', true);
+                while (saltos.has(currentPageNum) && currentPageNum > 1) currentPageNum--;
+                if (currentPageNum >= 1) loadPage(currentPageNum);
             }
         }
 
-        function nextImage() {
-            if (currentImageNum < 711) {
-                currentImageNum++;
+        function nextPage() {
+            if (currentPageNum < 732) {
                 currentPageNum++;
-                while (saltos.has(currentPageNum) && currentPageNum < 732) {
-                    currentPageNum++;
-                }
-                loadPage(currentPageNum, 'Navegación', true);
+                while (saltos.has(currentPageNum) && currentPageNum < 732) currentPageNum++;
+                if (currentPageNum <= 732) loadPage(currentPageNum);
             }
         }
 
-        // Búsqueda
+        function showRandom() {
+            let pageNum;
+            do {
+                pageNum = Math.floor(Math.random() * 732) + 1;
+            } while (saltos.has(pageNum));
+            document.getElementById('pageInput').value = pageNum;
+            loadPage(pageNum);
+        }
+
+        // Búsqueda inteligente
         document.getElementById('searchInput').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase();
-            document.querySelectorAll('.tree-point').forEach(point => {
-                const text = point.textContent.toLowerCase();
-                point.style.display = text.includes(query) ? 'flex' : 'none';
-            });
+            const query = e.target.value.trim();
+            if (query.match(/^\d+$/)) {
+                const pageNum = parseInt(query);
+                if (pageNum >= 1 && pageNum <= 732) {
+                    document.getElementById('pageInput').value = pageNum;
+                    loadPage(pageNum);
+                }
+            }
         });
 
-        // Inicializar
-        generateIndex();
+        // Atajos de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') previousPage();
+            if (e.key === 'ArrowRight') nextPage();
+            if (e.key === 'Enter' && document.activeElement.id === 'pageInput') goToPage();
+        });
+
+        // Swipe gestures para móvil
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+        document.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].clientX;
+            if (touchStartX - touchEndX > 50) nextPage();
+            if (touchEndX - touchStartX > 50) previousPage();
+        });
+
+        // Cargar página inicial
+        document.getElementById('pageInput').value = 1;
+        loadPage(1);
     </script>
 </body>
 </html>
