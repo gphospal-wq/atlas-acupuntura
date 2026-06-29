@@ -2,40 +2,279 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atlas de Acupuntura - Claudia Focks</title>
-    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#2d5f4f">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Atlas de Acupuntura - Claudia Focks</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-512.png">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #faf8f3; color: #2c3e50; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        header { text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #2d5f4f 0%, #3a7d6a 100%); border-radius: 15px; margin-bottom: 25px; }
-        header h1 { font-size: 2em; color: white; margin-bottom: 5px; }
-        header .subtitle { font-size: 0.9em; color: #e8d4a0; }
-        .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .search-box { flex: 1; min-width: 200px; background: white; padding: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
-        .search-box input { width: 100%; border: none; font-size: 16px; outline: none; }
-        .btn { padding: 12px 20px; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
-        .btn-primary { background: #2d5f4f; color: white; }
-        .btn-primary:hover { background: #3a7d6a; transform: translateY(-2px); }
-        .btn-secondary { background: white; color: #2d5f4f; border: 2px solid #2d5f4f; }
-        .viewer { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); min-height: 500px; text-align: center; }
-        .viewer img { max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-        .viewer-info { background: #faf8f3; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: inline-block; border-left: 4px solid #c9a961; }
-        .nav-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-        .placeholder { padding: 60px 20px; color: #8b9aa8; }
-        .placeholder-icon { font-size: 3em; margin-bottom: 15px; opacity: 0.5; }
-        .error { background: #fff5f5; color: #c53030; padding: 15px; border-radius: 8px; margin-top: 15px; }
-        .page-input { width: 100px; padding: 8px; border: 2px solid #2d5f4f; border-radius: 8px; font-size: 16px; text-align: center; }
-        .quick-jump { display: flex; gap: 10px; align-items: center; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: #faf8f3; 
+            color: #2c3e50; 
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        
+        header { 
+            text-align: center; 
+            padding: 25px 20px; 
+            background: linear-gradient(135deg, #2d5f4f 0%, #3a7d6a 100%); 
+            border-radius: 15px; 
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(45, 95, 79, 0.2);
+        }
+        header h1 { font-size: 1.8em; color: white; margin-bottom: 5px; }
+        header .subtitle { font-size: 0.85em; color: #e8d4a0; }
+        
+        .mode-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 5px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #8b9aa8;
+        }
+        .mode-btn.active {
+            background: #2d5f4f;
+            color: white;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .search-box input {
+            width: 100%;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            padding: 10px;
+        }
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            margin-top: 5px;
+        }
+        .search-result-item {
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+        .search-result-item:hover {
+            background: #faf8f3;
+        }
+        .search-result-item strong {
+            color: #2d5f4f;
+            font-size: 1.1em;
+        }
+        .search-result-item small {
+            color: #8b9aa8;
+            display: block;
+            margin-top: 3px;
+        }
+        
+        .quick-nav {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .quick-nav::-webkit-scrollbar { display: none; }
+        .quick-nav-btn {
+            padding: 10px 18px;
+            background: white;
+            border: 2px solid #2d5f4f;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d5f4f;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .quick-nav-btn:hover, .quick-nav-btn.active {
+            background: #2d5f4f;
+            color: white;
+        }
+        
+        .points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .point-card {
+            background: white;
+            padding: 18px 12px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .point-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+            border-color: #2d5f4f;
+        }
+        .point-code {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2d5f4f;
+            margin-bottom: 5px;
+        }
+        .point-name {
+            font-size: 0.9em;
+            color: #8b9aa8;
+            margin-bottom: 8px;
+        }
+        .point-page {
+            font-size: 0.8em;
+            color: #c9a961;
+            font-weight: 600;
+        }
+        
+        .viewer {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            display: none;
+        }
+        .viewer.active { display: block; }
+        .viewer-info {
+            background: #faf8f3;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-left: 4px solid #c9a961;
+        }
+        .viewer img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            cursor: zoom-in;
+        }
+        .viewer img.zoomed {
+            transform: scale(2);
+            cursor: zoom-out;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #2d5f4f;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #3a7d6a;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: white;
+            color: #2d5f4f;
+            border: 2px solid #2d5f4f;
+        }
+        .btn-secondary:hover {
+            background: #2d5f4f;
+            color: white;
+        }
+        
+        .placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8b9aa8;
+        }
+        .placeholder-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #2d5f4f;
+        }
+        
+        .error {
+            background: #fff5f5;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #c53030;
+        }
+        
+        .section-title {
+            font-size: 1.2em;
+            color: #2d5f4f;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8d4a0;
+        }
+        
         @media (max-width: 768px) {
             .container { padding: 10px; }
             header { padding: 20px 15px; }
-            header h1 { font-size: 1.5em; }
-            .viewer { padding: 15px; }
+            header h1 { font-size: 1.4em; }
+            .points-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+            .point-card { padding: 12px 8px; }
+            .point-code { font-size: 1.2em; }
+            .point-name { font-size: 0.8em; }
         }
     </style>
 </head>
@@ -43,72 +282,464 @@
     <div class="container">
         <header>
             <h1>📚 Atlas de Acupuntura</h1>
-            <div class="subtitle">Claudia Focks - Edición Digital</div>
+            <div class="subtitle">Claudia Focks - Edición Digital Pro</div>
         </header>
 
-        <div class="controls">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 Buscar por número de página (ej: 83, 129, 251)...">
+        <div class="mode-toggle">
+            <button class="mode-btn active" onclick="switchMode('search')">🔍 Buscar</button>
+            <button class="mode-btn" onclick="switchMode('grid')">📋 Puntos por Meridiano</button>
+            <button class="mode-btn" onclick="switchMode('viewer')">🖼️ Visor</button>
+        </div>
+
+        <!-- MODO BÚSQUEDA -->
+        <div id="searchMode" class="mode-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Busca: P1, Zhongfu, E36, Zusanli, Pulmón...">
+                </div>
+                <div class="search-results" id="searchResults"></div>
             </div>
+            
+            <div class="section-title">Accesos Rápidos</div>
+            <div class="quick-nav" id="quickNav"></div>
         </div>
 
-        <div class="quick-jump">
-            <span>Ir a página:</span>
-            <input type="number" id="pageInput" class="page-input" min="1" max="732" placeholder="83">
-            <button class="btn btn-primary" onclick="goToPage()">Ir</button>
-            <button class="btn btn-secondary" onclick="showRandom()"> Aleatorio</button>
+        <!-- MODO GRID -->
+        <div id="gridMode" class="mode-section" style="display: none;">
+            <div class="quick-nav" id="meridianNav"></div>
+            <div class="points-grid" id="pointsGrid"></div>
         </div>
 
+        <!-- VISOR -->
         <div class="viewer" id="viewer">
-            <div class="placeholder">
-                <div class="placeholder-icon">📖</div>
-                <h3>Introduce un número de página</h3>
-                <p>Usa el buscador o el campo de arriba para navegar</p>
-                <p style="margin-top: 20px; font-size: 0.9em;">💡 Ejemplos: 83 (P1), 129 (E1), 251 (V1)</p>
+            <div id="viewerContent">
+                <div class="placeholder">
+                    <div class="placeholder-icon">📖</div>
+                    <h3>Selecciona un punto</h3>
+                    <p>Usa la búsqueda o el grid para navegar</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // DATOS SINCRONIZADOS Y VERIFICADOS
+        // DATOS SINCRONIZADOS - 732 páginas, 711 imágenes, 21 saltos
         const GITHUB_BASE = 'https://raw.githubusercontent.com/gphospal-wq/atlas-acupuntura/main/';
-        
-        // Saltos de página (sin imagen) - VERIFICADOS
         const saltos = new Set([30, 94, 128, 174, 202, 216, 222, 242, 348, 362, 390, 398, 466, 560, 562, 572, 584, 600, 618, 664, 724]);
         
         let currentImageNum = 0;
         let currentPageNum = 0;
+        let currentMeridian = 'all';
 
-        // FÓRMULA VERIFICADA: imagen = página - saltos_acumulados
+        // BASE DE DATOS COMPLETA DE PUNTOS
+        const puntosDB = [
+            // Pulmón
+            { code: 'P1', name: 'Zhongfu', page: 83, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P2', name: 'Yunmen', page: 84, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P3', name: 'Tianfu', page: 85, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P4', name: 'Xiabai', page: 86, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P5', name: 'Chize', page: 87, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P6', name: 'Kongzui', page: 88, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P7', name: 'Lieque', page: 89, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P8', name: 'Jingqu', page: 90, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P9', name: 'Taiyuan', page: 91, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P10', name: 'Yuji', page: 92, meridian: 'Pulmón', meridianCode: 'P' },
+            { code: 'P11', name: 'Shaoshang', page: 93, meridian: 'Pulmón', meridianCode: 'P' },
+            
+            // Intestino Grueso
+            { code: 'IG1', name: 'Shangyang', page: 101, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG2', name: 'Erjian', page: 102, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG3', name: 'Sanjian', page: 103, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG4', name: 'Hegu', page: 104, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG5', name: 'Yangxi', page: 105, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG6', name: 'Pianli', page: 106, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG7', name: 'Wenliu', page: 107, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG8', name: 'Xialian', page: 108, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG9', name: 'Shanglian', page: 109, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG10', name: 'Shousanli', page: 110, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG11', name: 'Quchi', page: 111, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG12', name: 'Zhouliao', page: 112, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG13', name: 'Shouwuli', page: 113, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG14', name: 'Binao', page: 114, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG15', name: 'Jianyu', page: 115, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG16', name: 'Jugu', page: 116, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG17', name: 'Tianding', page: 117, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG18', name: 'Futu', page: 118, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG19', name: 'Heliao', page: 119, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            { code: 'IG20', name: 'Yingxiang', page: 120, meridian: 'Intestino Grueso', meridianCode: 'IG' },
+            
+            // Estómago
+            { code: 'E1', name: 'Chengqi', page: 129, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E2', name: 'Sibai', page: 130, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E3', name: 'Juliao', page: 131, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E4', name: 'Dicang', page: 132, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E5', name: 'Daying', page: 133, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E6', name: 'Jiache', page: 134, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E7', name: 'Xiaguan', page: 135, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E8', name: 'Touwei', page: 136, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E9', name: 'Renying', page: 137, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E10', name: 'Shuitu', page: 138, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E11', name: 'Qishe', page: 139, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E12', name: 'Quepen', page: 140, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E13', name: 'Qihu', page: 141, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E14', name: 'Kufang', page: 142, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E15', name: 'Wuyi', page: 143, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E16', name: 'Yingchuang', page: 144, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E17', name: 'Ruzhong', page: 145, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E18', name: 'Rugen', page: 146, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E19', name: 'Burong', page: 147, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E20', name: 'Chengman', page: 148, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E21', name: 'Liangmen', page: 149, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E22', name: 'Guanmen', page: 150, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E23', name: 'Taiyi', page: 151, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E24', name: 'Huaroumen', page: 152, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E25', name: 'Tianshu', page: 153, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E26', name: 'Wailing', page: 154, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E27', name: 'Daju', page: 155, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E28', name: 'Shuidao', page: 156, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E29', name: 'Guilai', page: 157, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E30', name: 'Qichong', page: 158, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E31', name: 'Biguan', page: 159, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E32', name: 'Futu', page: 160, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E33', name: 'Yinshi', page: 161, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E34', name: 'Liangqiu', page: 162, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E35', name: 'Dibi', page: 163, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E36', name: 'Zusanli', page: 164, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E37', name: 'Shangjuxu', page: 165, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E38', name: 'Tiaokou', page: 166, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E39', name: 'Xiajuxu', page: 167, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E40', name: 'Fenglong', page: 168, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E41', name: 'Jiexi', page: 169, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E42', name: 'Chongyang', page: 170, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E43', name: 'Xiangu', page: 171, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E44', name: 'Neiting', page: 172, meridian: 'Estómago', meridianCode: 'E' },
+            { code: 'E45', name: 'Lidui', page: 173, meridian: 'Estómago', meridianCode: 'E' },
+            
+            // Bazo
+            { code: 'B1', name: 'Yinbai', page: 181, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B2', name: 'Dadu', page: 182, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B3', name: 'Taibai', page: 183, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B4', name: 'Gongsun', page: 184, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B5', name: 'Shangqiu', page: 185, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B6', name: 'Sanyinjiao', page: 186, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B7', name: 'Lougu', page: 187, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B8', name: 'Diji', page: 188, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B9', name: 'Yinlingquan', page: 189, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B10', name: 'Xuehai', page: 190, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B11', name: 'Jishu', page: 191, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B12', name: 'Chongmen', page: 192, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B13', name: 'Fushe', page: 193, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B14', name: 'Fujie', page: 194, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B15', name: 'Daheng', page: 195, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B16', name: 'Fuai', page: 196, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B17', name: 'Shidou', page: 197, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B18', name: 'Tianxi', page: 198, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B19', name: 'Xiongxiang', page: 199, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B20', name: 'Zhouying', page: 200, meridian: 'Bazo', meridianCode: 'B' },
+            { code: 'B21', name: 'Dabao', page: 201, meridian: 'Bazo', meridianCode: 'B' },
+            
+            // Corazón
+            { code: 'C1', name: 'Jiquan', page: 207, meridian: 'Corazón', meridianCode: 'C' },
+            { code: 'C2', name: 'Qingling', page: 208, meridian: 'Corazón', meridianCode: 'C' },
+            { code: 'C3', name: 'Shaohai', page: 209, meridian: 'Corazón', meridianCode: 'C' },
+            { code: 'C4', name: 'Lingdao', page: 210, meridian: 'Corazón', meridianCode: 'C' },
+            { code: 'C5', name: 'Tongli', page: 211, meridian: 'Corazón', meridianCode: 'C' },
+            { code: 'C6', name: 'Yinxi', page: 212, meridian: 'Corazón', meridianCode: 'C' },
+            { code: 'C7', name: 'Shenmen', page: 213, meridian: 'Corazón', meridianCode: 'C' },
+            { code: 'C8', name: 'Shaofu', page: 214, meridian: 'Corazón', meridianCode: 'C' },
+            { code: 'C9', name: 'Shaochong', page: 215, meridian: 'Corazón', meridianCode: 'C' },
+            
+            // Intestino Delgado
+            { code: 'ID1', name: 'Shaoze', page: 223, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID2', name: 'Qiangu', page: 224, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID3', name: 'Houxi', page: 225, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID4', name: 'Wangu', page: 226, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID5', name: 'Yanggu', page: 227, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID6', name: 'Yanglao', page: 228, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID7', name: 'Zhizheng', page: 229, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID8', name: 'Xiaohai', page: 230, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID9', name: 'Jianzhen', page: 231, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID10', name: 'Naoshu', page: 232, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID11', name: 'Tianzong', page: 233, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID12', name: 'Bingfeng', page: 234, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID13', name: 'Quyuan', page: 235, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID14', name: 'Jianwaishu', page: 236, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID15', name: 'Jianzhongshu', page: 237, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID16', name: 'Tianchuang', page: 238, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID17', name: 'Tianrong', page: 239, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID18', name: 'Quanliao', page: 240, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            { code: 'ID19', name: 'Tinggong', page: 241, meridian: 'Intestino Delgado', meridianCode: 'ID' },
+            
+            // Vejiga (puntos principales)
+            { code: 'V1', name: 'Jingming', page: 251, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V2', name: 'Zanzhu', page: 252, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V10', name: 'Tianzhu', page: 260, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V11', name: 'Dazhu', page: 261, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V12', name: 'Fengmen', page: 262, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V13', name: 'Feishu', page: 263, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V14', name: 'Jueyinshu', page: 264, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V15', name: 'Xinshu', page: 265, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V16', name: 'Dushu', page: 266, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V17', name: 'Geshu', page: 267, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V18', name: 'Ganshu', page: 268, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V19', name: 'Danshu', page: 269, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V20', name: 'Pishu', page: 270, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V21', name: 'Weishu', page: 271, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V22', name: 'Sanjiaoshu', page: 272, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V23', name: 'Shenshu', page: 273, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V24', name: 'Qihaishu', page: 274, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V25', name: 'Dachangshu', page: 275, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V26', name: 'Guanyuanshu', page: 276, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V27', name: 'Xiaochangshu', page: 277, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V28', name: 'Pangguangshu', page: 278, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V31', name: 'Shangliao', page: 281, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V32', name: 'Ciliao', page: 282, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V33', name: 'Zhongliao', page: 283, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V34', name: 'Xialiao', page: 284, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V40', name: 'Weizhong', page: 290, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V57', name: 'Chengshan', page: 307, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V60', name: 'Kunlun', page: 310, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V62', name: 'Shenmai', page: 312, meridian: 'Vejiga', meridianCode: 'V' },
+            { code: 'V67', name: 'Zhiyin', page: 314, meridian: 'Vejiga', meridianCode: 'V' },
+            
+            // Riñón
+            { code: 'R1', name: 'Yongquan', page: 321, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R2', name: 'Rangu', page: 322, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R3', name: 'Taixi', page: 323, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R4', name: 'Dazhong', page: 324, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R5', name: 'Shuiquan', page: 325, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R6', name: 'Zhaohai', page: 326, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R7', name: 'Fuliu', page: 327, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R8', name: 'Jiaoxin', page: 328, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R9', name: 'Zhubin', page: 329, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R10', name: 'Yingu', page: 330, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R11', name: 'Henggu', page: 331, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R12', name: 'Dahe', page: 332, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R13', name: 'Qixue', page: 333, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R14', name: 'Siman', page: 334, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R15', name: 'Zhongzhu', page: 335, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R16', name: 'Huangshu', page: 336, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R17', name: 'Shangqu', page: 337, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R18', name: 'Shiguan', page: 338, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R19', name: 'Yindu', page: 339, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R20', name: 'Tonggu', page: 340, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R21', name: 'Youmen', page: 341, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R22', name: 'Bulang', page: 342, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R23', name: 'Shenfeng', page: 343, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R24', name: 'Lingxu', page: 344, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R25', name: 'Shencang', page: 345, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R26', name: 'Yuzhong', page: 346, meridian: 'Riñón', meridianCode: 'R' },
+            { code: 'R27', name: 'Shufu', page: 347, meridian: 'Riñón', meridianCode: 'R' },
+            
+            // Pericardio
+            { code: 'MC1', name: 'Tianchi', page: 353, meridian: 'Pericardio', meridianCode: 'MC' },
+            { code: 'MC2', name: 'Tianquan', page: 354, meridian: 'Pericardio', meridianCode: 'MC' },
+            { code: 'MC3', name: 'Quze', page: 355, meridian: 'Pericardio', meridianCode: 'MC' },
+            { code: 'MC4', name: 'Ximen', page: 356, meridian: 'Pericardio', meridianCode: 'MC' },
+            { code: 'MC5', name: 'Jianshi', page: 357, meridian: 'Pericardio', meridianCode: 'MC' },
+            { code: 'MC6', name: 'Neiguan', page: 358, meridian: 'Pericardio', meridianCode: 'MC' },
+            { code: 'MC7', name: 'Daling', page: 359, meridian: 'Pericardio', meridianCode: 'MC' },
+            { code: 'MC8', name: 'Laogong', page: 360, meridian: 'Pericardio', meridianCode: 'MC' },
+            { code: 'MC9', name: 'Zhongchong', page: 361, meridian: 'Pericardio', meridianCode: 'MC' },
+            
+            // Triple Recalentador
+            { code: 'TR1', name: 'Guanchong', page: 367, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR2', name: 'Yemen', page: 368, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR3', name: 'Zhongzhu', page: 369, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR4', name: 'Yangchi', page: 370, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR5', name: 'Waiguan', page: 371, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR6', name: 'Zhigou', page: 372, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR7', name: 'Huizong', page: 373, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR8', name: 'Sanyangluo', page: 374, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR9', name: 'Sidu', page: 375, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR10', name: 'Tianjing', page: 376, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR11', name: 'Qinglengyuan', page: 377, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR12', name: 'Xiaoluo', page: 378, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR13', name: 'Naohui', page: 379, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR14', name: 'Jianliao', page: 380, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR15', name: 'Tianliao', page: 381, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR16', name: 'Tianyou', page: 382, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR17', name: 'Yifeng', page: 383, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR18', name: 'Chimai', page: 384, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR19', name: 'Luxi', page: 385, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR20', name: 'Jiaosun', page: 386, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR21', name: 'Ermen', page: 387, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR22', name: 'Erheliao', page: 388, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            { code: 'TR23', name: 'Sizhukong', page: 389, meridian: 'Triple Recalentador', meridianCode: 'TR' },
+            
+            // Vesícula Biliar
+            { code: 'VB1', name: 'Tongziliao', page: 399, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB2', name: 'Tinghui', page: 400, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB20', name: 'Fengchi', page: 418, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB21', name: 'Jianjing', page: 419, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB30', name: 'Huantiao', page: 428, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB34', name: 'Yanglingquan', page: 432, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB36', name: 'Waiqiu', page: 434, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB37', name: 'Guangming', page: 435, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB39', name: 'Xuanzhong', page: 437, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB40', name: 'Qiuxu', page: 438, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB41', name: 'Zulinqi', page: 439, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            { code: 'VB44', name: 'Zuqiaoyin', page: 442, meridian: 'Vesícula Biliar', meridianCode: 'VB' },
+            
+            // Hígado
+            { code: 'H1', name: 'Dadun', page: 449, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H2', name: 'Xingjian', page: 450, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H3', name: 'Taichong', page: 451, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H4', name: 'Zhongfeng', page: 452, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H5', name: 'Ligou', page: 453, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H6', name: 'Zhongdu', page: 454, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H7', name: 'Xiguan', page: 455, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H8', name: 'Ququan', page: 456, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H9', name: 'Yinbao', page: 457, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H10', name: 'Zuwuli', page: 458, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H11', name: 'Yinlian', page: 459, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H12', name: 'Jimai', page: 460, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H13', name: 'Zhangmen', page: 461, meridian: 'Hígado', meridianCode: 'H' },
+            { code: 'H14', name: 'Qimen', page: 462, meridian: 'Hígado', meridianCode: 'H' }
+        ];
+
+        const meridianos = [
+            { code: 'P', name: 'Pulmón', color: '#2d5f4f' },
+            { code: 'IG', name: 'Intestino Grueso', color: '#3a7d6a' },
+            { code: 'E', name: 'Estómago', color: '#c9a961' },
+            { code: 'B', name: 'Bazo', color: '#8b7355' },
+            { code: 'C', name: 'Corazón', color: '#c53030' },
+            { code: 'ID', name: 'Intestino Delgado', color: '#d69e2e' },
+            { code: 'V', name: 'Vejiga', color: '#2b6cb0' },
+            { code: 'R', name: 'Riñón', color: '#1a365d' },
+            { code: 'MC', name: 'Pericardio', color: '#805ad5' },
+            { code: 'TR', name: 'Triple Recalentador', color: '#97266d' },
+            { code: 'VB', name: 'Vesícula Biliar', color: '#276749' },
+            { code: 'H', name: 'Hígado', color: '#22543d' }
+        ];
+
         function pageToImage(pageNum) {
             if (pageNum < 1 || pageNum > 732) return null;
             if (saltos.has(pageNum)) return null;
-            
             let img = pageNum;
             saltos.forEach(s => { if (s < pageNum) img--; });
             return img;
         }
 
-        function goToPage() {
-            const pageNum = parseInt(document.getElementById('pageInput').value);
-            if (!pageNum || pageNum < 1 || pageNum > 732) {
-                alert('Introduce un número de página válido (1-732)');
-                return;
+        function switchMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.mode-section').forEach(section => section.style.display = 'none');
+            document.getElementById('viewer').classList.remove('active');
+            
+            if (mode === 'search') {
+                document.querySelector('.mode-btn:nth-child(1)').classList.add('active');
+                document.getElementById('searchMode').style.display = 'block';
+            } else if (mode === 'grid') {
+                document.querySelector('.mode-btn:nth-child(2)').classList.add('active');
+                document.getElementById('gridMode').style.display = 'block';
+                if (currentMeridian === 'all') showMeridianGrid('all');
+            } else if (mode === 'viewer') {
+                document.querySelector('.mode-btn:nth-child(3)').classList.add('active');
+                document.getElementById('viewer').classList.add('active');
             }
-            loadPage(pageNum);
         }
 
+        function initQuickNav() {
+            const quickNav = document.getElementById('quickNav');
+            const meridianNav = document.getElementById('meridianNav');
+            
+            quickNav.innerHTML = meridianos.map(m => `
+                <button class="quick-nav-btn" onclick="filterByMeridian('${m.code}', '${m.name}')">
+                    ${m.code} - ${m.name}
+                </button>
+            `).join('');
+            
+            meridianNav.innerHTML = `
+                <button class="quick-nav-btn ${currentMeridian === 'all' ? 'active' : ''}" onclick="showMeridianGrid('all')">
+                    Todos
+                </button>
+                ${meridianos.map(m => `
+                    <button class="quick-nav-btn ${currentMeridian === m.code ? 'active' : ''}" onclick="showMeridianGrid('${m.code}')">
+                        ${m.code} - ${m.name}
+                    </button>
+                `).join('')}
+            `;
+        }
+
+        function filterByMeridian(code, name) {
+            const puntos = puntosDB.filter(p => p.meridianCode === code);
+            const grid = document.getElementById('pointsGrid');
+            
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #8b9aa8;">
+                ${name} (${puntos.length} puntos)
+            </div>` + puntos.map(p => createPointCard(p)).join('');
+            
+            switchMode('grid');
+        }
+
+        function showMeridianGrid(code) {
+            currentMeridian = code;
+            initQuickNav();
+            
+            const grid = document.getElementById('pointsGrid');
+            const puntos = code === 'all' ? puntosDB : puntosDB.filter(p => p.meridianCode === code);
+            
+            grid.innerHTML = puntos.map(p => createPointCard(p)).join('');
+        }
+
+        function createPointCard(punto) {
+            return `
+                <div class="point-card" onclick="selectPoint(${punto.page}, '${punto.code}')">
+                    <div class="point-code">${punto.code}</div>
+                    <div class="point-name">${punto.name}</div>
+                    <div class="point-page">Pág. ${punto.page}</div>
+                </div>
+            `;
+        }
+
+        function selectPoint(page, code) {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').style.display = 'none';
+            document.getElementById('pageInput').value = page;
+            loadPage(page);
+            switchMode('viewer');
+        }
+
+        // Búsqueda inteligente
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const resultsDiv = document.getElementById('searchResults');
+            
+            if (query.length < 2) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+            
+            const results = puntosDB.filter(p => 
+                p.code.toLowerCase().includes(query) ||
+                p.name.toLowerCase().includes(query) ||
+                p.meridian.toLowerCase().includes(query)
+            );
+            
+            if (results.length > 0) {
+                resultsDiv.innerHTML = results.slice(0, 20).map(p => `
+                    <div class="search-result-item" onclick="selectPoint(${p.page}, '${p.code}')">
+                        <strong>${p.code} - ${p.name}</strong>
+                        <small>${p.meridian} • Página ${p.page}</small>
+                    </div>
+                `).join('');
+                resultsDiv.style.display = 'block';
+            } else {
+                resultsDiv.style.display = 'none';
+            }
+        });
+
         function loadPage(pageNum) {
-            const viewer = document.getElementById('viewer');
-            viewer.innerHTML = '<div class="placeholder"><div class="placeholder-icon">⏳</div><p>Cargando...</p></div>';
+            const viewerContent = document.getElementById('viewerContent');
+            viewerContent.innerHTML = '<div class="loading">⏳ Cargando...</div>';
             
             const imageNum = pageToImage(pageNum);
             
             if (imageNum === null) {
-                viewer.innerHTML = `
+                viewerContent.innerHTML = `
                     <div class="error">
                         <h3>📄 Página ${pageNum}</h3>
-                        <p>Esta página no tiene imagen asociada (es un salto en el libro)</p>
+                        <p>Esta página no tiene imagen asociada</p>
                     </div>`;
                 return;
             }
@@ -121,11 +752,11 @@
         function displayImage(imageNum, pageNum) {
             const paddedNum = String(imageNum).padStart(4, '0');
             const imageUrl = GITHUB_BASE + paddedNum + '.jpg';
-            const viewer = document.getElementById('viewer');
+            const viewerContent = document.getElementById('viewerContent');
             
             const img = new Image();
             img.onload = function() {
-                viewer.innerHTML = `
+                viewerContent.innerHTML = `
                     <div class="viewer-info">
                         <strong>📖 Página:</strong> ${pageNum} | 
                         <strong>🖼️ Imagen:</strong> ${paddedNum}.jpg
@@ -133,19 +764,17 @@
                     <img src="${imageUrl}" alt="Página ${pageNum}" onclick="toggleZoom(this)">
                     <div class="nav-buttons">
                         <button class="btn btn-secondary" onclick="previousPage()">⬅️ Anterior</button>
-                        <button class="btn btn-primary" onclick="nextPage()">Siguiente ️</button>
+                        <button class="btn btn-primary" onclick="nextPage()">Siguiente ➡️</button>
                     </div>`;
             };
             img.onerror = function() {
-                viewer.innerHTML = `<div class="error">No se pudo cargar la imagen ${paddedNum}.jpg<br>Verifica tu conexión o que el archivo existe en GitHub</div>`;
+                viewerContent.innerHTML = `<div class="error">No se pudo cargar la imagen ${paddedNum}.jpg</div>`;
             };
             img.src = imageUrl;
         }
 
         function toggleZoom(img) {
-            img.style.transform = img.style.transform === 'scale(2)' ? 'scale(1)' : 'scale(2)';
-            img.style.transition = 'transform 0.3s';
-            img.style.cursor = img.style.transform === 'scale(2)' ? 'zoom-out' : 'zoom-in';
+            img.classList.toggle('zoomed');
         }
 
         function previousPage() {
@@ -164,46 +793,15 @@
             }
         }
 
-        function showRandom() {
-            let pageNum;
-            do {
-                pageNum = Math.floor(Math.random() * 732) + 1;
-            } while (saltos.has(pageNum));
-            document.getElementById('pageInput').value = pageNum;
-            loadPage(pageNum);
-        }
-
-        // Búsqueda inteligente
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const query = e.target.value.trim();
-            if (query.match(/^\d+$/)) {
-                const pageNum = parseInt(query);
-                if (pageNum >= 1 && pageNum <= 732) {
-                    document.getElementById('pageInput').value = pageNum;
-                    loadPage(pageNum);
-                }
+        // Cerrar búsqueda al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                document.getElementById('searchResults').style.display = 'none';
             }
         });
 
-        // Atajos de teclado
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') previousPage();
-            if (e.key === 'ArrowRight') nextPage();
-            if (e.key === 'Enter' && document.activeElement.id === 'pageInput') goToPage();
-        });
-
-        // Swipe gestures para móvil
-        let touchStartX = 0;
-        document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
-        document.addEventListener('touchend', e => {
-            const touchEndX = e.changedTouches[0].clientX;
-            if (touchStartX - touchEndX > 50) nextPage();
-            if (touchEndX - touchStartX > 50) previousPage();
-        });
-
-        // Cargar página inicial
-        document.getElementById('pageInput').value = 1;
-        loadPage(1);
+        // Inicializar
+        initQuickNav();
     </script>
 </body>
 </html>
