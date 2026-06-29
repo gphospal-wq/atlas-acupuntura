@@ -2,132 +2,519 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atlas de Acupuntura - Claudia Focks</title>
-    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#2d5f4f">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Atlas Acupuntura">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Atlas Focks">
+    <title>Atlas de Acupuntura - Claudia Focks</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-512.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #faf8f3; color: #2c3e50; line-height: 1.6; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        header { text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #2d5f4f 0%, #3a7d6a 100%); border-radius: 15px; margin-bottom: 25px; box-shadow: 0 8px 30px rgba(45, 95, 79, 0.18); }
-        header h1 { font-size: 2.5em; color: white; margin-bottom: 5px; }
-        header .subtitle { font-size: 1em; color: #e8d4a0; }
-        .search-box { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 25px; }
-        .search-box input { width: 100%; padding: 12px; border: 2px solid #5a9d8a; border-radius: 8px; font-size: 16px; }
-        .search-box input:focus { outline: none; border-color: #2d5f4f; }
-        .main-grid { display: grid; grid-template-columns: 1fr; gap: 25px; }
-        @media (min-width: 1024px) { .main-grid { grid-template-columns: 350px 1fr; } }
-        .nav-panel { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); max-height: 80vh; overflow-y: auto; }
-        .nav-panel h2 { font-size: 1.5em; color: #2d5f4f; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e8d4a0; }
-        .tree-item { margin: 5px 0; }
-        .tree-header { padding: 10px 12px; background: #faf8f3; border-radius: 8px; cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; }
-        .tree-header:hover { background: #f0ebe3; border-left-color: #3a7d6a; }
-        .tree-header.active { background: #3a7d6a; color: white; }
-        .tree-children { display: none; margin-left: 15px; padding-left: 10px; border-left: 2px solid #e8d4a0; margin-top: 5px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --primary: #2d5f4f;
+            --primary-dark: #1a3d33;
+            --secondary: #3a7d6a;
+            --accent: #c9a961;
+            --bg: #faf8f3;
+            --surface: #ffffff;
+            --text: #2c3e50;
+            --text-secondary: #8b9aa8;
+            --border: #e8e4dc;
+            --shadow: rgba(45, 95, 79, 0.15);
+        }
+        [data-theme="dark"] {
+            --bg: #1a1f2e;
+            --surface: #2d3748;
+            --text: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --border: #4a5568;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+        .app-container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 10px;
+            min-height: 100vh;
+        }
+        header { 
+            text-align: center; 
+            padding: 20px 15px; 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 4px 15px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30%, -30%); }
+        }
+        header h1 { 
+            font-size: clamp(1.5em, 5vw, 2em); 
+            color: white; 
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+        header .subtitle { 
+            font-size: 0.9em; 
+            color: var(--accent);
+            position: relative;
+            z-index: 1;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .search-box { 
+            flex: 1;
+            min-width: 200px;
+            background: var(--surface); 
+            padding: 12px 15px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-box input { 
+            flex: 1;
+            border: none; 
+            background: transparent;
+            font-size: 15px; 
+            color: var(--text);
+            outline: none;
+        }
+        .search-box input::placeholder { color: var(--text-secondary); }
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px var(--shadow);
+            transition: all 0.2s;
+            font-size: 1.2em;
+        }
+        .btn-icon:hover, .btn-icon.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        .main-grid { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 15px; 
+        }
+        @media (min-width: 1024px) { 
+            .main-grid { grid-template-columns: 320px 1fr; } 
+        }
+        .nav-panel { 
+            background: var(--surface); 
+            padding: 15px; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 15px var(--shadow);
+            max-height: calc(100vh - 250px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .nav-panel h2 { 
+            font-size: 1.1em; 
+            color: var(--primary); 
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tree-item { margin: 3px 0; }
+        .tree-header { 
+            padding: 10px 12px; 
+            background: var(--bg); 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95em;
+        }
+        .tree-header:hover { 
+            background: var(--border);
+            border-left-color: var(--secondary);
+        }
+        .tree-header.active { 
+            background: var(--primary); 
+            color: white;
+            border-left-color: var(--accent);
+        }
+        .tree-children { 
+            display: none; 
+            margin-left: 12px; 
+            padding-left: 10px; 
+            border-left: 2px solid var(--border);
+            margin-top: 5px;
+        }
         .tree-children.show { display: block; }
-        .tree-point { padding: 8px 12px; margin: 3px 0; background: white; border-radius: 6px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; border: 1px solid #e8e4dc; }
-        .tree-point:hover { background: #3a7d6a; color: white; transform: translateX(3px); }
-        .tree-point.active { background: #2d5f4f; color: white; }
-        .viewer-panel { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); min-height: 600px; }
-        .viewer-header { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #e8d4a0; }
-        .viewer-header h2 { font-size: 1.8em; color: #2d5f4f; margin-bottom: 8px; }
-        .viewer-info { background: #faf8f3; padding: 12px 20px; border-radius: 8px; display: inline-block; border-left: 4px solid #c9a961; }
-        .image-container { text-align: center; margin: 25px 0; }
-        .image-display { max-width: 100%; border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); border: 3px solid #e8d4a0; }
-        .nav-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 25px; flex-wrap: wrap; }
-        .btn { padding: 10px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-        .btn-primary { background: linear-gradient(135deg, #2d5f4f 0%, #3a7d6a 100%); color: white; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(58, 125, 106, 0.3); }
-        .btn-secondary { background: white; color: #2d5f4f; border: 2px solid #3a7d6a; }
-        .btn-secondary:hover { background: #3a7d6a; color: white; }
-        .placeholder { text-align: center; padding: 60px 20px; color: #8b9aa8; }
-        .placeholder-icon { font-size: 3em; margin-bottom: 15px; opacity: 0.5; }
-        .loading { text-align: center; padding: 50px 20px; color: #3a7d6a; font-size: 1.1em; }
-        .error { background: #fff5f5; color: #c53030; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #c53030; }
-        .no-image { background: #f0f4f8; color: #5a6c7d; padding: 30px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #5a9d8a; text-align: center; }
+        .tree-point { 
+            padding: 8px 12px; 
+            margin: 2px 0; 
+            background: var(--surface); 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 0.9em;
+            border: 1px solid var(--border);
+        }
+        .tree-point:hover { 
+            background: var(--primary); 
+            color: white;
+            transform: translateX(3px);
+            border-color: var(--primary);
+        }
+        .tree-point.active { 
+            background: var(--secondary); 
+            color: white;
+            border-color: var(--secondary);
+        }
+        .tree-point .page-num {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+        }
+        .tree-point.active .page-num { color: var(--accent); }
+        .viewer-panel { 
+            background: var(--surface); 
+            padding: 15px; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 15px var(--shadow);
+            min-height: 500px;
+            position: relative;
+        }
+        .viewer-header { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 15px; 
+            border-bottom: 2px solid var(--border);
+        }
+        .viewer-header h2 { 
+            font-size: 1.4em; 
+            color: var(--primary); 
+            margin-bottom: 8px;
+        }
+        .viewer-info { 
+            background: var(--bg); 
+            padding: 10px 15px; 
+            border-radius: 8px; 
+            display: inline-block;
+            border-left: 4px solid var(--accent);
+            font-size: 0.9em;
+        }
+        .image-container { 
+            text-align: center; 
+            margin: 20px 0;
+            position: relative;
+            background: var(--bg);
+            border-radius: 10px;
+            overflow: hidden;
+            touch-action: pinch-zoom;
+        }
+        .image-display { 
+            max-width: 100%; 
+            height: auto;
+            border-radius: 10px; 
+            box-shadow: 0 4px 20px var(--shadow);
+            cursor: zoom-in;
+            transition: transform 0.3s;
+        }
+        .image-display.zoomed {
+            cursor: zoom-out;
+            transform: scale(2);
+        }
+        .nav-buttons { 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .btn { 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 14px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
+            color: white;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+        .btn-primary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+        .btn-secondary { 
+            background: var(--surface); 
+            color: var(--primary); 
+            border: 2px solid var(--secondary);
+        }
+        .btn-secondary:hover { 
+            background: var(--secondary); 
+            color: white;
+        }
+        .btn-favorite {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 2px 10px var(--shadow);
+            z-index: 10;
+            transition: all 0.2s;
+        }
+        .btn-favorite:hover, .btn-favorite.active {
+            background: #e53e3e;
+            color: white;
+            transform: scale(1.1);
+        }
+        .placeholder { 
+            text-align: center; 
+            padding: 80px 20px; 
+            color: var(--text-secondary);
+        }
+        .placeholder-icon { 
+            font-size: 4em; 
+            margin-bottom: 15px; 
+            opacity: 0.5;
+        }
+        .loading { 
+            text-align: center; 
+            padding: 60px 20px; 
+            color: var(--primary);
+            font-size: 1.1em;
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .error { 
+            background: #fff5f5; 
+            color: #c53030; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-top: 15px; 
+            border-left: 4px solid #c53030;
+        }
+        [data-theme="dark"] .error {
+            background: #742a2a;
+            color: #feb2b2;
+        }
+        .no-image { 
+            background: var(--bg); 
+            color: var(--text-secondary); 
+            padding: 30px; 
+            border-radius: 8px; 
+            margin-top: 15px; 
+            border-left: 4px solid var(--secondary);
+            text-align: center;
+        }
+        .quick-nav {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin-bottom: 15px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .quick-nav-item {
+            padding: 8px 15px;
+            background: var(--surface);
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+            white-space: nowrap;
+            border: 2px solid var(--border);
+            transition: all 0.2s;
+        }
+        .quick-nav-item:hover, .quick-nav-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .history-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--surface);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--shadow);
+            max-width: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        .history-panel.show { display: block; }
+        .history-item {
+            padding: 8px;
+            margin: 3px 0;
+            background: var(--bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        .history-item:hover {
+            background: var(--primary);
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .app-container { padding: 5px; }
+            header { padding: 15px 10px; }
+            .viewer-panel { padding: 10px; }
+            .nav-panel { max-height: 40vh; }
+        }
+        .install-prompt {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            padding: 15px;
+            box-shadow: 0 -4px 20px var(--shadow);
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            z-index: 1000;
+        }
+        .install-prompt.show { display: flex; }
+        .install-prompt text { flex: 1; }
+        .install-prompt h3 { margin-bottom: 5px; color: var(--primary); }
+        .install-prompt p { font-size: 0.9em; color: var(--text-secondary); }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <header>
-            <h1>Atlas de Acupuntura</h1>
-            <div class="subtitle">Claudia Focks - Edición Digital</div>
+            <h1>📚 Atlas de Acupuntura</h1>
+            <div class="subtitle">Claudia Focks - Edición Digital Pro</div>
         </header>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar punto, meridiano o página...">
+
+        <div class="controls">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar punto, meridiano o página...">
+            </div>
+            <button class="btn-icon" id="themeToggle" title="Cambiar tema">🌓</button>
+            <button class="btn-icon" id="historyToggle" title="Historial">🕐</button>
+            <button class="btn-icon" id="favoritesToggle" title="Favoritos">⭐</button>
         </div>
+
+        <div class="quick-nav" id="quickNav"></div>
+
         <div class="main-grid">
             <div class="nav-panel">
-                <h2>📚 Índice</h2>
+                <h2>📑 Índice</h2>
                 <div id="treeNav"></div>
             </div>
             <div class="viewer-panel">
+                <button class="btn-favorite" id="favoriteBtn" title="Añadir a favoritos">☆</button>
                 <div id="viewerContent">
                     <div class="placeholder">
                         <div class="placeholder-icon">📖</div>
                         <h3>Selecciona un punto o capítulo</h3>
                         <p>La imagen aparecerá aquí</p>
+                        <p style="margin-top: 20px; font-size: 0.9em;">💡 Consejo: Usa las flechas del teclado para navegar</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="history-panel" id="historyPanel">
+        <h3 style="margin-bottom: 10px; color: var(--primary);">🕐 Historial</h3>
+        <div id="historyList"></div>
+    </div>
+
+    <div class="install-prompt" id="installPrompt">
+        <div>
+            <h3>📲 Instalar Atlas</h3>
+            <p>Accede offline como una app nativa</p>
+        </div>
+        <button class="btn btn-primary" id="installBtn">Instalar</button>
+        <button class="btn btn-secondary" id="dismissInstall">✕</button>
+    </div>
+
     <script>
+        // DATOS SINCRONIZADOS - 732 páginas, 711 imágenes, 21 saltos
         const GITHUB_BASE = 'https://raw.githubusercontent.com/gphospal-wq/atlas-acupuntura/main/';
         
-        // PUNTOS DE CONTROL VERIFICADOS (imagen → página)
-        const controlPoints = [
-            { img: 1, page: 1 },
-            { img: 24, page: 24 },
-            { img: 76, page: 77 },
-            { img: 121, page: 123 },
-            { img: 166, page: 169 },
-            { img: 200, page: 205 },
-            { img: 230, page: 237 },
-            { img: 250, page: 258 },
-            { img: 306, page: 314 },
-            { img: 336, page: 344 },
-            { img: 350, page: 359 },
-            { img: 382, page: 393 },
-            { img: 400, page: 412 },
-            { img: 427, page: 439 },
-            { img: 447, page: 459 },
-            { img: 500, page: 513 },
-            { img: 600, page: 619 },
-            { img: 700, page: 720 }
-        ];
+        const saltos = new Set([30, 94, 128, 174, 202, 216, 222, 242, 348, 362, 390, 398, 466, 560, 562, 572, 584, 600, 618, 664, 724]);
         
-        // Función para calcular imagen desde página usando interpolación
-        function pageToImage(pageNum) {
-            // Buscar entre qué puntos de control está
-            for (let i = 0; i < controlPoints.length - 1; i++) {
-                if (pageNum >= controlPoints[i].page && pageNum <= controlPoints[i + 1].page) {
-                    // Interpolación lineal
-                    const ratio = (pageNum - controlPoints[i].page) / (controlPoints[i + 1].page - controlPoints[i].page);
-                    const img = controlPoints[i].img + ratio * (controlPoints[i + 1].img - controlPoints[i].img);
-                    return Math.round(img);
-                }
-            }
-            
-            // Fuera de rango
-            if (pageNum < controlPoints[0].page) return null;
-            if (pageNum > controlPoints[controlPoints.length - 1].page) {
-                const last = controlPoints[controlPoints.length - 1];
-                return last.img + (pageNum - last.page);
-            }
-            
-            return null;
-        }
-        
-        // Páginas sin imagen (saltos conocidos)
-        const noImagePages = [30, 94, 174, 202, 216, 222, 242, 345, 362, 390, 466, 560, 562, 572, 584, 600, 618, 664, 724];
-        
+        let currentImageNum = 0;
+        let currentPageNum = 0;
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        let history = JSON.parse(localStorage.getItem('history') || '[]');
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        let deferredPrompt = null;
+
+        // Inicializar tema
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
+        // Índice completo sincronizado
         const indexData = [
             { title: '📖 Capítulos Preliminares', children: [
                 { title: 'Cap 1: Jing luo', page: 1 },
@@ -351,11 +738,11 @@
                     { name: 'Du25 - Suliao', page: 523 }, { name: 'Du26 - Shuigou', page: 524 },
                     { name: 'Du27 - Duijiao', page: 525 }, { name: 'Du28 - Yinjiao', page: 526 }
                 ]},
-                { title: '5.4 Dai mai', page: 527, noImage: true },
+                { title: '5.4 Dai mai', page: 527 },
                 { title: '5.5 Yin wei mai', page: 528 },
-                { title: '5.6 Yang wei mai', page: 530, noImage: true },
-                { title: '5.7 Yin qiao mai', page: 533, noImage: true },
-                { title: '5.8 Yang qiao mai', page: 534, noImage: true }
+                { title: '5.6 Yang wei mai', page: 530 },
+                { title: '5.7 Yin qiao mai', page: 533 },
+                { title: '5.8 Yang qiao mai', page: 534 }
             ]},
             { title: '📌 Puntos Adicionales', children: [
                 { title: '6.1 Ex-CaCu (Cabeza y Cuello)', page: 537, points: [
@@ -406,42 +793,42 @@
                 ]}
             ]},
             { title: '📍 Puntos por Región', children: [
-                { title: '7.1 Cara anterior de la cabeza', page: 619, noImage: true },
-                { title: '7.2 Cabeza y cara lateral del cuello', page: 623, noImage: true },
-                { title: '7.3 Región occipital', page: 627, noImage: true },
-                { title: '7.4 Vértice craneal', page: 629, noImage: true },
-                { title: '7.5 Espalda', page: 632, noImage: true },
-                { title: '7.6 Tórax y abdomen', page: 634, noImage: true },
-                { title: '7.7 Hombro posterior y brazo', page: 636, noImage: true },
-                { title: '7.8 Hombro anterior y brazo', page: 640, noImage: true },
-                { title: '7.9 Dorso de la mano', page: 644, noImage: true },
-                { title: '7.10 Pierna anterior', page: 646, noImage: true },
-                { title: '7.11 Pierna medial', page: 650, noImage: true },
-                { title: '7.12 Pierna lateral', page: 653, noImage: true },
-                { title: '7.13 Dorso del pie', page: 656, noImage: true },
-                { title: '7.14 Pie medial', page: 660, noImage: true },
+                { title: '7.1 Cara anterior de la cabeza', page: 619 },
+                { title: '7.2 Cabeza y cara lateral', page: 623 },
+                { title: '7.3 Región occipital', page: 627 },
+                { title: '7.4 Vértice craneal', page: 629 },
+                { title: '7.5 Espalda', page: 632 },
+                { title: '7.6 Tórax y abdomen', page: 634 },
+                { title: '7.7 Hombro posterior', page: 636 },
+                { title: '7.8 Hombro anterior', page: 640 },
+                { title: '7.9 Dorso de la mano', page: 644 },
+                { title: '7.10 Pierna anterior', page: 646 },
+                { title: '7.11 Pierna medial', page: 650 },
+                { title: '7.12 Pierna lateral', page: 653 },
+                { title: '7.13 Dorso del pie', page: 656 },
+                { title: '7.14 Pie medial', page: 660 },
                 { title: '7.15 Pie lateral', page: 662 }
             ]},
             { title: '📚 Categorías y Selección', children: [
-                { title: '8.1 Categorías de puntos', page: 665, noImage: true },
-                { title: '8.2 Estrategias para selección', page: 685, noImage: true },
-                { title: '8.3 Combinaciones de puntos', page: 691, noImage: true }
+                { title: '8.1 Categorías de puntos', page: 665 },
+                { title: '8.2 Estrategias', page: 685 },
+                { title: '8.3 Combinaciones', page: 691 }
             ]},
-            { title: '🔬 Investigación Científica', children: [
-                { title: '9.1 Introducción', page: 697, noImage: true },
-                { title: '9.2 Investigación por meridianos', page: 699, noImage: true },
-                { title: '9.3 Resumen', page: 721, noImage: true }
-            ]},
-            { title: '📎 Apéndice e Índice', children: [
-                { title: 'Notas al capítulo 1', page: 723 },
-                { title: 'Bibliografía', page: 725, noImage: true },
-                { title: 'Índice alfabético', page: 727 }
+            { title: '🔬 Investigación', children: [
+                { title: '9.1 Introducción', page: 697 },
+                { title: '9.2 Por meridianos', page: 699 },
+                { title: '9.3 Resumen', page: 721 }
             ]}
         ];
-        
-        let currentImageNum = 0;
-        let currentPageNum = 0;
-        
+
+        // Funciones principales
+        function pageToImage(pageNum) {
+            if (saltos.has(pageNum)) return null;
+            let img = pageNum;
+            saltos.forEach(s => { if (s < pageNum) img--; });
+            return img;
+        }
+
         function generateIndex() {
             const treeNav = document.getElementById('treeNav');
             let html = '';
@@ -449,13 +836,13 @@
                 html += `<div class="tree-item">`;
                 html += `<div class="tree-header" onclick="toggleTree(this, event)">`;
                 html += `<span>${section.title}</span>`;
-                html += `<span style="font-size: 0.8em;">▼</span></div>`;
+                html += `<span>▼</span></div>`;
                 html += `<div class="tree-children">`;
                 section.children.forEach(child => {
                     if (child.points) {
                         html += `<div class="tree-header" onclick="toggleTree(this, event)" style="margin: 5px 0; font-size: 0.9em;">`;
                         html += `<span>${child.title}</span>`;
-                        html += `<span style="font-size: 0.8em;">▼</span></div>`;
+                        html += `<span>▼</span></div>`;
                         html += `<div class="tree-children">`;
                         child.points.forEach(point => {
                             const hasImage = pageToImage(point.page) !== null;
@@ -464,18 +851,18 @@
                                 : `showNoImage(${point.page}, '${point.name}', this, event)`;
                             html += `<div class="tree-point" onclick="${clickHandler}">`;
                             html += `<span>${point.name}</span>`;
-                            html += `<span style="color: #8b9aa8; font-size: 0.85em;">pág. ${point.page}</span>`;
+                            html += `<span class="page-num">pág. ${point.page}</span>`;
                             html += `</div>`;
                         });
                         html += `</div>`;
                     } else {
-                        const hasImage = !child.noImage;
+                        const hasImage = !saltos.has(child.page);
                         const clickHandler = hasImage 
                             ? `loadPage(${child.page}, this, event)` 
                             : `showNoImage(${child.page}, '${child.title}', this, event)`;
                         html += `<div class="tree-point" onclick="${clickHandler}">`;
                         html += `<span>${child.title}</span>`;
-                        html += `<span style="color: #8b9aa8; font-size: 0.85em;">pág. ${child.page}</span>`;
+                        html += `<span class="page-num">pág. ${child.page}</span>`;
                         html += `</div>`;
                     }
                 });
@@ -483,7 +870,7 @@
             });
             treeNav.innerHTML = html;
         }
-        
+
         function toggleTree(element, event) {
             if (event) event.stopPropagation();
             const children = element.nextElementSibling;
@@ -492,27 +879,29 @@
                 element.classList.toggle('active');
             }
         }
-        
+
         function loadPage(pageNum, element, event) {
             if (event) event.stopPropagation();
             document.querySelectorAll('.tree-point').forEach(p => p.classList.remove('active'));
             if (element) element.classList.add('active');
             
             const viewerContent = document.getElementById('viewerContent');
-            viewerContent.innerHTML = '<div class="loading">Cargando imagen...</div>';
+            viewerContent.innerHTML = '<div class="loading">Cargando</div>';
             
             const imageNum = pageToImage(pageNum);
             
             if (imageNum !== null && imageNum >= 1 && imageNum <= 711) {
                 currentPageNum = pageNum;
                 currentImageNum = imageNum;
+                addToHistory(pageNum);
+                updateFavoriteBtn();
                 displayImage(imageNum, pageNum, element);
             } else {
                 viewerContent.innerHTML = `<div class="error">No hay imagen para página ${pageNum}</div>`;
                 if (element) element.classList.remove('active');
             }
         }
-        
+
         function showNoImage(pageNum, title, element, event) {
             if (event) event.stopPropagation();
             document.querySelectorAll('.tree-point').forEach(p => p.classList.remove('active'));
@@ -521,10 +910,10 @@
                 <div class="no-image">
                     <h2>📄 ${title}</h2>
                     <p>Página ${pageNum}</p>
-                    <p style="margin-top: 20px; font-size: 0.9em;">Esta página no tiene imágenes asociadas.</p>
+                    <p style="margin-top: 20px;">Esta página no tiene imágenes asociadas.</p>
                 </div>`;
         }
-        
+
         function displayImage(imageNum, pageNum, element) {
             const paddedNum = String(imageNum).padStart(4, '0');
             const imageUrl = GITHUB_BASE + paddedNum + '.jpg';
@@ -537,38 +926,95 @@
                             <strong>Imagen:</strong> ${paddedNum}.jpg | <strong>Página:</strong> ${pageNum}
                         </div>
                     </div>
-                    <div class="image-container">
-                        <img src="${imageUrl}" alt="Página ${pageNum}" class="image-display">
+                    <div class="image-container" onclick="toggleZoom(event)">
+                        <img src="${imageUrl}" alt="Página ${pageNum}" class="image-display" id="mainImage">
                     </div>
                     <div class="nav-buttons">
                         <button class="btn btn-primary" onclick="previousImage()">⬅️ Anterior</button>
                         <button class="btn btn-secondary" onclick="nextImage()">Siguiente ➡️</button>
+                        <button class="btn btn-secondary" onclick="sharePage()">📤 Compartir</button>
                     </div>`;
                 currentImageNum = imageNum;
                 if (element) element.classList.remove('active');
             };
             img.onerror = function() {
-                document.getElementById('viewerContent').innerHTML = `<div class="error">No se pudo cargar ${paddedNum}.jpg<br>Verifica que el archivo existe en GitHub</div>`;
+                document.getElementById('viewerContent').innerHTML = `<div class="error">No se pudo cargar ${paddedNum}.jpg<br>Verifica tu conexión</div>`;
                 if (element) element.classList.remove('active');
             };
             img.src = imageUrl;
         }
-        
+
+        function toggleZoom(event) {
+            if (event.target.classList.contains('image-display')) {
+                event.target.classList.toggle('zoomed');
+            }
+        }
+
         function previousImage() {
             if (currentImageNum > 1) { 
                 currentImageNum--; 
                 currentPageNum--; 
-                displayImage(currentImageNum, currentPageNum, null); 
+                while (saltos.has(currentPageNum) && currentPageNum > 1) currentPageNum--;
+                displayImage(currentImageNum, currentPageNum, null);
+                updateFavoriteBtn();
             }
         }
+
         function nextImage() {
             if (currentImageNum < 711) { 
                 currentImageNum++; 
                 currentPageNum++; 
-                displayImage(currentImageNum, currentPageNum, null); 
+                while (saltos.has(currentPageNum) && currentPageNum < 732) currentPageNum++;
+                displayImage(currentImageNum, currentPageNum, null);
+                updateFavoriteBtn();
             }
         }
-        
+
+        // Favoritos
+        function toggleFavorite() {
+            if (!currentPageNum) return;
+            const idx = favorites.indexOf(currentPageNum);
+            if (idx > -1) {
+                favorites.splice(idx, 1);
+            } else {
+                favorites.push(currentPageNum);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavoriteBtn();
+        }
+
+        function updateFavoriteBtn() {
+            const btn = document.getElementById('favoriteBtn');
+            if (btn) {
+                btn.textContent = favorites.includes(currentPageNum) ? '★' : '☆';
+                btn.classList.toggle('active', favorites.includes(currentPageNum));
+            }
+        }
+
+        // Historial
+        function addToHistory(pageNum) {
+            history = history.filter(p => p !== pageNum);
+            history.unshift(pageNum);
+            if (history.length > 20) history.pop();
+            localStorage.setItem('history', JSON.stringify(history));
+        }
+
+        function showHistory() {
+            const panel = document.getElementById('historyPanel');
+            const list = document.getElementById('historyList');
+            if (history.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-secondary); padding: 10px;">Sin historial</p>';
+            } else {
+                list.innerHTML = history.map(p => `
+                    <div class="history-item" onclick="loadPage(${p}, null, null); document.getElementById('historyPanel').classList.remove('show')">
+                        Página ${p}
+                    </div>
+                `).join('');
+            }
+            panel.classList.toggle('show');
+        }
+
+        // Búsqueda
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase();
             document.querySelectorAll('.tree-point').forEach(point => {
@@ -576,7 +1022,58 @@
                 point.style.display = text.includes(query) ? 'flex' : 'none';
             });
         });
-        
+
+        // Tema
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        // Event listeners
+        document.getElementById('historyToggle').addEventListener('click', showHistory);
+        document.getElementById('favoritesToggle').addEventListener('click', () => {
+            alert('Favoritos: ' + favorites.join(', '));
+        });
+        document.getElementById('favoriteBtn').addEventListener('click', toggleFavorite);
+
+        // Atajos de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') previousImage();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'f' || e.key === 'F') toggleFavorite();
+        });
+
+        // Swipe gestures
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+        document.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].clientX;
+            if (touchStartX - touchEndX > 50) nextImage();
+            if (touchEndX - touchStartX > 50) previousImage();
+        });
+
+        // PWA Install
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.add('show');
+        });
+
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                document.getElementById('installPrompt').classList.remove('show');
+            }
+        });
+
+        document.getElementById('dismissInstall').addEventListener('click', () => {
+            document.getElementById('installPrompt').classList.remove('show');
+        });
+
+        // Inicializar
         generateIndex();
     </script>
 </body>
